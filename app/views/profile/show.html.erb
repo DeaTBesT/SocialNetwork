@@ -1,4 +1,10 @@
 <div class="min-h-screen flex flex-col items-center bg-gradient-to-br from-gray-900 via-black to-gray-800 px-4 pt-28">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-900/40 mb-5 text-green-300 font-medium rounded-md inline-block" id="notice">
+      <%= notice %>
+    </p>
+  <% end %>
+
   <div class="max-w-3xl w-full bg-gray-800/80 backdrop-blur-md py-8 px-6 shadow-xl rounded-2xl border border-gray-700 text-white text-center">
     <h1 class="text-3xl font-bold mb-2"><%= @user.email %></h1>
     <p class="text-gray-300 mb-6">Это профиль пользователя. Здесь можно разместить настройки и информацию.</p>
@@ -14,12 +20,57 @@
       </div>
     <% end %>
 
+    <% if user_signed_in? && @user != current_user %>
+      <div class="mb-6">
+        <% if current_user.following.include?(@user) %>
+          <%= button_to "Отписаться", user_subscription_path(@user, current_user.active_subscriptions.find_by(followed: @user)),
+                        method: :delete,
+                        class: "px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md" %>
+        <% else %>
+          <%= button_to "Подписаться", user_subscriptions_path(@user),
+                        method: :post,
+                        class: "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md" %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Подписки и подписчики -->
+    <div class="flex justify-around mb-6 text-left space-x-4">
+      <div class="flex-1">
+        <h3 class="text-xl font-semibold mb-2">Подписки</h3>
+        <% if @user.following.any? %>
+          <ul class="list-disc ml-5 text-gray-300">
+            <% @user.following.each do |u| %>
+              <li><%= link_to u.email, profile_show_path(u), class: "hover:text-indigo-400" %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-gray-400">Пользователь ни на кого не подписан.</p>
+        <% end %>
+      </div>
+
+      <div class="flex-1">
+        <h3 class="text-xl font-semibold mb-2">Подписчики</h3>
+        <% if @user.followers.any? %>
+          <ul class="list-disc ml-5 text-gray-300">
+            <% @user.followers.each do |u| %>
+              <li><%= link_to u.email, profile_show_path(u), class: "hover:text-indigo-400" %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-gray-400">У пользователя пока нет подписчиков.</p>
+        <% end %>
+      </div>
+    </div>
+
     <h2 class="text-2xl font-semibold text-white mb-4">Посты пользователя</h2>
     <% if @user.posts.any? %>
       <div class="space-y-4">
         <% @user.posts.each do |post| %>
           <div class="bg-gray-700/70 backdrop-blur-md p-4 rounded-xl shadow-md text-left">
-            <h3 class="text-xl font-semibold text-white mb-1"><%= link_to post.title, post_path(post), class: "hover:text-indigo-400" %></h3>
+            <h3 class="text-xl font-semibold text-white mb-1">
+              <%= link_to post.title, post_path(post), class: "hover:text-indigo-400" %>
+            </h3>
             <p class="text-gray-300 text-sm"><%= truncate(post.body, length: 120) %></p>
             <% if post.tags.present? %>
               <p class="text-indigo-400 text-sm mt-1">Теги: <%= post.tags %></p>

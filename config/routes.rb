@@ -12,6 +12,11 @@ Rails.application.routes.draw do
     root to: "posts#index", as: :authenticated_root
   end
 
+  resources :users, only: [ :show ] do
+    resources :subscriptions, only: [ :create, :destroy ]
+  end
+
+
   # Главная страница для гостей
   devise_scope :user do
     root to: "devise/sessions#new", as: :unauthenticated_root

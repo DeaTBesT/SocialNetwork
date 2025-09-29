@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_29_160334) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_29_165315) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -34,6 +34,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_160334) do
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
+  create_table "subscriptions", force: :cascade do |t|
+    t.bigint "follower_id", null: false
+    t.bigint "followed_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["followed_id"], name: "index_subscriptions_on_followed_id"
+    t.index ["follower_id", "followed_id"], name: "index_subscriptions_on_follower_id_and_followed_id", unique: true
+    t.index ["follower_id"], name: "index_subscriptions_on_follower_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -49,4 +59,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_29_160334) do
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
   add_foreign_key "posts", "users"
+  add_foreign_key "subscriptions", "users", column: "followed_id"
+  add_foreign_key "subscriptions", "users", column: "follower_id"
 end
