@@ -4,6 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  has_many :posts
   validates :email, presence: { message: "не может быть пустым" }
   validates :password, presence: { message: "не может быть пустым" }, on: :create
 end
