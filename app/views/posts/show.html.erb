@@ -9,7 +9,10 @@
 
   <div class="bg-gray-800/80 backdrop-blur-md p-8 shadow-xl rounded-2xl border border-gray-700">
     <h1 class="text-4xl font-bold text-white mb-6"><%= @post.title %></h1>
-
+    <p class="text-sm text-gray-400 mb-2">
+      Автор: 
+      <%= link_to @post.user.email, profile_show_path(user_id: @post.user.id), class: "text-indigo-400 hover:underline" %>
+    </p>
     <p class="text-gray-300 mb-4"><%= @post.body %></p>
 
     <% if @post.tags.present? %>
