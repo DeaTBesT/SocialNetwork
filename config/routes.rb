@@ -1,13 +1,18 @@
 Rails.application.routes.draw do
-  resources :posts
-  get "profile/show"
-  devise_for :users
-
-  authenticated :user do
-    root to: "profile#show", as: :authenticated_root
+  resources :posts do
+    resources :comments, only: [ :create, :destroy ]
   end
 
-  # Для гостей используем devise_scope
+  devise_for :users
+
+  get "/profile/:user_id", to: "profile#show", as: :profile_show
+
+  # Главная страница для авторизованных пользователей
+  authenticated :user do
+    root to: "posts#index", as: :authenticated_root
+  end
+
+  # Главная страница для гостей
   devise_scope :user do
     root to: "devise/sessions#new", as: :unauthenticated_root
   end

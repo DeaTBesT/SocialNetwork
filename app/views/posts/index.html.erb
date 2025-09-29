@@ -19,14 +19,19 @@
       <% @posts.each do |post| %>
         <div class="bg-gray-800/80 backdrop-blur-md p-5 rounded-2xl shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 border border-gray-700">
           <div class="text-white flex-1">
-            <h2 class="text-xl font-semibold mb-2"><%= post.title %></h2>
+            <h2 class="text-xl font-semibold mb-1"><%= post.title %></h2>
+            
+            <p class="text-sm text-gray-400 mb-2">
+              Автор: 
+              <%= link_to post.user.email, profile_show_path(user_id: post.user.id), class: "text-indigo-400 hover:underline" %>
+            </p>
+
             <p class="text-gray-300 mb-2"><%= truncate(post.body, length: 150) %></p>
             <% if post.tags.present? %>
               <p class="text-sm text-indigo-400">Теги: <%= post.tags %></p>
             <% end %>
           </div>
 
-          <!-- Действия -->
           <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4 sm:mt-0">
             <%= link_to "Просмотр", post, class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-700 hover:bg-gray-600 text-white font-medium transition" %>
 
