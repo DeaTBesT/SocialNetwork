@@ -1,43 +1,88 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<!-- app/views/devise/registrations/edit.html.erb -->
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 px-4">
+  <div class="max-w-md w-full space-y-8">
+    <div class="text-center">
+      <!-- Лого -->
+      <div class="mx-auto h-14 w-14 rounded-full flex items-center justify-center bg-gradient-to-tr from-indigo-500 to-purple-500 text-white shadow-lg">
+        <span class="font-bold text-xl">X.ru</span>
+      </div>
+      <h2 class="mt-6 text-3xl font-extrabold text-white">Редактирование профиля</h2>
+      <p class="mt-2 text-sm text-gray-400">Обновите свои данные</p>
+    </div>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-    <% if @minimum_password_length %>
-      <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
+    <% if resource.errors.any? %>
+      <div class="rounded-md bg-red-900/40 p-4 text-red-300">
+        <h3 class="text-sm font-medium">Ошибка</h3>
+        <ul class="mt-2 space-y-1 text-sm list-disc list-inside">
+          <% resource.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
     <% end %>
+
+    <div class="bg-gray-800/80 backdrop-blur-md py-8 px-6 shadow-xl rounded-2xl sm:px-10 border border-gray-700">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
+
+        <div>
+          <%= f.label :email, "Электронная почта", class: "block text-sm font-medium text-gray-300" %>
+          <%= f.email_field :email,
+                autofocus: true,
+                autocomplete: "email",
+                required: true,
+                class: "mt-1 block w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" %>
+        </div>
+
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <div class="text-gray-400 text-sm">Ожидается подтверждение для: <%= resource.unconfirmed_email %></div>
+        <% end %>
+
+        <div>
+          <%= f.label :password, "Пароль", class: "block text-sm font-medium text-gray-300" %>
+          <span class="text-gray-400 text-xs">(оставьте пустым, если не хотите менять)</span>
+          <%= f.password_field :password,
+                autocomplete: "new-password",
+                placeholder: "Новый пароль",
+                class: "mt-1 block w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" %>
+          <% if @minimum_password_length %>
+            <em class="text-gray-400 text-xs">(<%= @minimum_password_length %> символов минимум)</em>
+          <% end %>
+        </div>
+
+        <div>
+          <%= f.label :password_confirmation, "Подтверждение пароля", class: "block text-sm font-medium text-gray-300" %>
+          <%= f.password_field :password_confirmation,
+                autocomplete: "new-password",
+                placeholder: "Повторите пароль",
+                class: "mt-1 block w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" %>
+        </div>
+
+        <div>
+          <%= f.label :current_password, "Текущий пароль", class: "block text-sm font-medium text-gray-300" %>
+          <span class="text-gray-400 text-xs">(нужен для подтверждения изменений)</span>
+          <%= f.password_field :current_password,
+                autocomplete: "current-password",
+                placeholder: "Текущий пароль",
+                required: true,
+                class: "mt-1 block w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" %>
+        </div>
+
+        <div>
+          <%= f.submit "Обновить",
+                class: "w-full flex justify-center py-2 px-4 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition shadow-md" %>
+        </div>
+      <% end %>
+
+      <div class="mt-6 text-center">
+        <%= button_to "Удалить аккаунт", registration_path(resource_name),
+              data: { confirm: "Вы уверены?" },
+              method: :delete,
+              class: "py-2 px-4 bg-red-600 hover:bg-red-700 rounded-md shadow text-white font-medium transition" %>
+      </div>
+
+      <div class="mt-4 text-center text-xs text-gray-500">
+        <%= link_to "Назад", authenticated_root_path, class: "hover:underline hover:text-gray-300" %>
+      </div>
+    </div>
   </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>
+</div>

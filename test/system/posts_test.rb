@@ -14,7 +14,9 @@ class PostsTest < ApplicationSystemTestCase
     visit posts_url
     click_on "New post"
 
-    fill_in "Content", with: @post.content
+    fill_in "Body", with: @post.body
+    fill_in "Tags", with: @post.tags
+    fill_in "Title", with: @post.title
     fill_in "User", with: @post.user_id
     click_on "Create Post"
 
@@ -26,7 +28,9 @@ class PostsTest < ApplicationSystemTestCase
     visit post_url(@post)
     click_on "Edit this post", match: :first
 
-    fill_in "Content", with: @post.content
+    fill_in "Body", with: @post.body
+    fill_in "Tags", with: @post.tags
+    fill_in "Title", with: @post.title
     fill_in "User", with: @post.user_id
     click_on "Update Post"
 
